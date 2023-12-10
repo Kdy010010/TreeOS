@@ -3,25 +3,45 @@
 #include <cstdlib>
 
 int main() {
-    while (true) {
-        std::string user_input;
-        std::cout << "명령어를 입력하세요: ";
-        std::getline(std::cin, user_input);
-        
-        if (user_input == "help") {
-            std::cout << "도움말: help - 도움말 표시, cmd - command.o 실행" << std::endl;
-        } else if (user_input == "cmd") {
+    std::string user_input;
+    std::cout << "입력: ";
+    std::getline(std::cin, user_input);
+
+    if (user_input == "help") {
+        std::cout << "도움말 출력" << std::endl;
+    } else if (user_input == "cmd") {
+        try {
             system("./command.o");
-        } else if (user_input.substr(user_input.length() - 2) == ".o") {
-            std::string filename = user_input.substr(0, user_input.length() - 2);
-            if (std::ifstream(filename)) {
-                system(("./" + filename).c_str());
-            } else {
-                std::cout << "파일이 존재하지 않습니다: " << user_input << std::endl;
-            }
-        } else {
-            std::cout << "알 수 없는 명령어입니다." << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << "command.o 파일을 찾을 수 없습니다." << std::endl;
         }
+    } else if (user_input == "execute") {
+        std::string file_name;
+        std::cout << "실행할 파일명 입력: ";
+        std::getline(std::cin, file_name);
+        std::string file_path = std::string(get_current_dir_name()) + "/" + file_name;
+        try {
+            system(file_path.c_str());
+        } catch (const std::exception& e) {
+            std::cout << file_name << " 파일을 찾을 수 없습니다." << std::endl;
+        }
+    } else if (user_input == "editdir") {
+        std::string new_directory;
+        std::cout << "새로운 디렉토리 경로 입력: ";
+        std::getline(std::cin, new_directory);
+        try {
+            if (chdir(new_directory.c_str()) == 0) {
+                std::cout << "디렉토리가 " << new_directory << "로 변경되었습니다." << std::endl;
+            } else {
+                std::cout << "디렉토리를 찾을 수 없습니다." << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cout << "디렉토리를 찾을 수 없습니다." << std::endl;
+        }
+    } else {
+        std::cout << "알 수 없는 명령입니다." << std::endl;
     }
+
     return 0;
 }
+
