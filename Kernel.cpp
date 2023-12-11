@@ -9,36 +9,50 @@ int main() {
 
     if (user_input == "help") {
         std::cout << "도움말 출력" << std::endl;
-    } else if (user_input == "cmd") {
+    }
+    else if (user_input == "cmd") {
         try {
             system("./command.o");
-        } catch (const std::exception& e) {
+        }
+        catch (const std::exception& e) {
             std::cout << "command.o 파일을 찾을 수 없습니다." << std::endl;
         }
-    } else if (user_input == "execute") {
+    }
+    else if (user_input == "execute") {
         std::string file_name;
         std::cout << "실행할 파일명 입력: ";
         std::getline(std::cin, file_name);
-        std::string file_path = std::string(get_current_dir_name()) + "/" + file_name;
-        try {
-            system(file_path.c_str());
-        } catch (const std::exception& e) {
-            std::cout << file_name << " 파일을 찾을 수 없습니다." << std::endl;
+
+        if (file_name == "execute.o") {
+            try {
+                system(file_name.c_str());
+            }
+            catch (const std::exception& e) {
+                std::cout << file_name << " 파일을 찾을 수 없습니다." << std::endl;
+            }
         }
-    } else if (user_input == "editdir") {
+        else {
+            std::cout << "execute 명령은 execute.o 파일에만 적용됩니다." << std::endl;
+        }
+    }
+    else if (user_input == "editdir") {
         std::string new_directory;
         std::cout << "새로운 디렉토리 경로 입력: ";
         std::getline(std::cin, new_directory);
+
         try {
             if (chdir(new_directory.c_str()) == 0) {
                 std::cout << "디렉토리가 " << new_directory << "로 변경되었습니다." << std::endl;
-            } else {
+            }
+            else {
                 std::cout << "디렉토리를 찾을 수 없습니다." << std::endl;
             }
-        } catch (const std::exception& e) {
+        }
+        catch (const std::exception& e) {
             std::cout << "디렉토리를 찾을 수 없습니다." << std::endl;
         }
-    } else {
+    }
+    else {
         std::cout << "알 수 없는 명령입니다." << std::endl;
     }
 
